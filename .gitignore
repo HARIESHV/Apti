@@ -1,0 +1,7 @@
+aptitude.db
+__pycache__/
+*.pyc
+.env
+.DS_Store
+ngrok.exe
+ngrok-v3-stable-windows-amd64/

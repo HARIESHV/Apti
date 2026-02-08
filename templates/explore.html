@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 8rem; padding-bottom: 5rem;">
+    <h1 style="text-align: center; font-size: 3rem; margin-bottom: 1rem;" class="animate">Explore Questions</h1>
+    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 4rem;" class="animate">Sharpen your mind
+        with our community-curated aptitude challenges.</p>
+
+    {% if questions %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+        {% for q in questions %}
+        <div class="glass animate" style="padding: 2rem; position: relative;">
+            <span
+                style="position: absolute; top: 1rem; right: 1rem; padding: 0.3rem 0.8rem; border-radius: 20px; background: var(--primary-gradient); font-size: 0.8rem;">{{
+                q.category }}</span>
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.4;">{{ q.text }}</p>
+
+            <div class="options-container" data-correct="{{ q.answer }}" data-q-id="{{ q.id }}">
+                <button class="option-btn" onclick="selectOption(this, 'A')">A: {{ q.options.A }}</button>
+                <button class="option-btn" onclick="selectOption(this, 'B')">B: {{ q.options.B }}</button>
+                <button class="option-btn" onclick="selectOption(this, 'C')">C: {{ q.options.C }}</button>
+                <button class="option-btn" onclick="selectOption(this, 'D')">D: {{ q.options.D }}</button>
+            </div>
+
+            <button class="submit-btn btn btn-primary" style="width: 100%; margin-top: 1rem; display: none;"
+                onclick="submitAnswer(this)">Submit Answer</button>
+
+            <div class="feedback-msg" style="margin-top: 1rem; font-weight: 600; min-height: 1.2rem;"></div>
+
+            <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Posted by: <strong>{{ q.author }}</strong>
+                </p>
+                <a href="/question/{{ q.id }}"
+                    style="color: #ff9a9e; text-decoration: none; font-size: 0.9rem; font-weight: 600;">View Full Page
+                    →</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass" style="padding: 4rem; text-align: center;">
+        <p style="font-size: 1.5rem; color: var(--text-secondary);">No questions available yet. Check back soon!</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function selectOption(btn, picked) {
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.option-btn');
+        const submitBtn = container.nextElementSibling;
+
+        // Remove selected class from all buttons and add to clicked one
+        buttons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        // Store selected option
+        container.setAttribute('data-selected', picked);
+
+        // Show submit button
+        submitBtn.style.display = 'block';
+    }
+
+    function submitAnswer(submitBtn) {
+        const card = submitBtn.closest('.glass');
+        const container = card.querySelector('.options-container');
+        const picked = container.getAttribute('data-selected');
+        const correct = container.getAttribute('data-correct');
+        const feedback = card.querySelector('.feedback-msg');
+        const buttons = container.querySelectorAll('.option-btn');
+
+        if (!picked) return;
+
+        // Disable everything
+        buttons.forEach(b => b.disabled = true);
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+
+        if (picked === correct) {
+            buttons.forEach(b => {
+                if (b.innerText.startsWith(picked + ':')) b.classList.add('correct');
+            });
+            feedback.innerHTML = '<span style="color: #84fab0;">✓ Correct! Saving answer...</span>';
+        } else {
+            buttons.forEach(b => {
+                if (b.innerText.startsWith(picked + ':')) b.classList.add('incorrect');
+                if (b.innerText.startsWith(correct + ':')) b.classList.add('correct');
+            });
+            feedback.innerHTML = '<span style="color: #ff4d4d;">✗ Incorrect. Saving answer...</span>';
+        }
+
+        // Submit to backend
+        fetch('/submit_answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question_id: container.getAttribute('data-q-id'),
+                answer: picked
+            })
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.status === 'success') {
+                    submitBtn.style.display = 'none';
+                    feedback.innerHTML += ' <span style="color: #84fab0;">✓ Answer recorded!</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+{% endblock %}

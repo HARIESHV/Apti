@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass animate" style="max-width: 600px;">
+        <h2>Post Aptitude Question</h2>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Share a new challenge with the
+            community</p>
+
+        <form action="/post_question" method="POST">
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required
+                    style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: white; outline: none;">
+                    <option value="Quantitative" style="background: var(--dark-bg);">Quantitative</option>
+                    <option value="Logical Reasoning" style="background: var(--dark-bg);">Logical Reasoning</option>
+                    <option value="Verbal Ability" style="background: var(--dark-bg);">Verbal Ability</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="question">Question Text</label>
+                <textarea id="question" name="question" required rows="3" placeholder="Enter the question here..."
+                    style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: white; outline: none; resize: none;"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="option_a">Option A</label>
+                    <input type="text" id="option_a" name="option_a" required placeholder="Option A">
+                </div>
+                <div class="form-group">
+                    <label for="option_b">Option B</label>
+                    <input type="text" id="option_b" name="option_b" required placeholder="Option B">
+                </div>
+                <div class="form-group">
+                    <label for="option_c">Option C</label>
+                    <input type="text" id="option_c" name="option_c" required placeholder="Option C">
+                </div>
+                <div class="form-group">
+                    <label for="option_d">Option D</label>
+                    <input type="text" id="option_d" name="option_d" required placeholder="Option D">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="correct_answer">Correct Answer</label>
+                <select id="correct_answer" name="correct_answer" required
+                    style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: white; outline: none;">
+                    <option value="A" style="background: var(--dark-bg);">Option A</option>
+                    <option value="B" style="background: var(--dark-bg);">Option B</option>
+                    <option value="C" style="background: var(--dark-bg);">Option C</option>
+                    <option value="D" style="background: var(--dark-bg);">Option D</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Post Question</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

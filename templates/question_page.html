@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container"
+    style="padding-top: 8rem; min-height: 80vh; display: flex; justify-content: center; align-items: flex-start;">
+    <div class="glass animate" style="padding: 3rem; width: 100%; max-width: 800px; position: relative;">
+        <span
+            style="position: absolute; top: 1.5rem; right: 1.5rem; padding: 0.5rem 1rem; border-radius: 20px; background: var(--primary-gradient); font-size: 0.9rem;">{{
+            q.category }}</span>
+
+        <h2 style="font-size: 2rem; margin-bottom: 2rem; line-height: 1.4;">{{ q.text }}</h2>
+
+        <div class="options-container" data-correct="{{ q.answer }}">
+            <button class="option-btn" onclick="checkAnswer(this, 'A')">A: {{ q.options.A }}</button>
+            <button class="option-btn" onclick="checkAnswer(this, 'B')">B: {{ q.options.B }}</button>
+            <button class="option-btn" onclick="checkAnswer(this, 'C')">C: {{ q.options.C }}</button>
+            <button class="option-btn" onclick="checkAnswer(this, 'D')">D: {{ q.options.D }}</button>
+        </div>
+
+        <div id="feedback" style="margin-top: 2rem; font-size: 1.2rem; font-weight: 600; min-height: 1.5rem;"></div>
+
+        <div
+            style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+            <p style="color: var(--text-secondary);">Posted by: <strong>{{ q.author }}</strong></p>
+            <a href="/" class="btn" style="border: 1px solid var(--glass-border);">Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkAnswer(btn, picked) {
+        const container = btn.parentElement;
+        const correct = container.getAttribute('data-correct');
+        const feedback = document.getElementById('feedback');
+        const buttons = container.querySelectorAll('.option-btn');
+
+        // Disable all buttons
+        buttons.forEach(b => b.disabled = true);
+
+        if (picked === correct) {
+            btn.classList.add('correct');
+            feedback.innerHTML = '<span style="color: #84fab0;">✓ Correct! Saving answer...</span>';
+        } else {
+            btn.classList.add('incorrect');
+            buttons.forEach(b => {
+                if (b.innerText.startsWith(correct + ':')) {
+                    b.classList.add('correct');
+                }
+            });
+            feedback.innerHTML = '<span style="color: #ff4d4d;">✗ Incorrect. Saving answer...</span>';
+        }
+
+        // Submit to backend
+        fetch('/submit_answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question_id: '{{ q.id }}',
+                answer: picked
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (picked === correct) {
+                    feedback.innerHTML = '<span style="color: #84fab0;">✓ Correct! You picked the right answer.</span>';
+                } else {
+                    feedback.innerHTML = '<span style="color: #ff4d4d;">✗ Incorrect. The correct answer is ' + correct + '.</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                feedback.innerHTML += ' <span style="font-size:0.8rem; opacity:0.7;">(Note: Save failed)</span>';
+            });
+    }
+</script>
+{% endblock %}

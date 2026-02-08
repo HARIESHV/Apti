@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero container">
+    <div class="hero-text animate">
+        <h1>Master Your Aptitude,<br>Shape Your Future.</h1>
+        <p>Unlock your potential with our comprehensive training modules and practice tests designed to help you excel
+            in any competitive environment.</p>
+        <div class="hero-btns">
+            <a href="/login" class="btn btn-primary">Login to Access</a>
+            <a href="#features" class="btn" style="border: 1px solid var(--glass-border); margin-left: 1rem;">Learn
+                More</a>
+        </div>
+    </div>
+    <div class="hero-image animate"
+        style="animation-delay: 0.2s; position: relative; width: 400px; height: 400px; display: flex; justify-content: center; align-items: center;">
+        <div
+            style="width: 100%; height: 100%; background: var(--primary-gradient); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; filter: blur(50px); opacity: 0.6; position: absolute;">
+        </div>
+        <div class="glass"
+            style="width: 350px; height: 350px; display: flex; justify-content: center; align-items: center; position: relative; z-index: 1;">
+            <span style="font-size: 8rem;">🚀</span>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="container" style="padding: 5rem 0;">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;" class="animate">Why Choose Aptitude?</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div class="glass animate" style="padding: 2rem; animation-delay: 0.4s;">
+            <h3 style="margin-bottom: 1rem; color: #ff9a9e;">Quantitative</h3>
+            <p style="color: var(--text-secondary);">Master number systems, arithmetic, and advanced mathematics with
+                ease.</p>
+        </div>
+        <div class="glass animate" style="padding: 2rem; animation-delay: 0.5s;">
+            <h3 style="margin-bottom: 1rem; color: #a18cd1;">Logical Reasoning</h3>
+            <p style="color: var(--text-secondary);">Sharpen your mind with puzzles, patterns, and logical deductions.
+            </p>
+        </div>
+        <div class="glass animate" style="padding: 2rem; animation-delay: 0.6s;">
+            <h3 style="margin-bottom: 1rem; color: #84fab0;">Verbal Ability</h3>
+            <p style="color: var(--text-secondary);">Improve your vocabulary and linguistic skills for professional
+                success.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Keeping this script for potential future interactions or navigation effects
+    function checkAnswer(btn, picked) {
+        // Questions removed from home page, logic maintained for separate question pages
+    }
+</script>
+{% endblock %}

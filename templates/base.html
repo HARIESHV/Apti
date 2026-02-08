@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aptitude - Master Your Skills</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <nav id="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo">Aptitude</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/explore">Explore</a></li>
+                <li><a href="#features">Features</a></li>
+                {% if session.get('user') %}
+                {% if session.get('role') == 'admin' %}
+                <li><a href="/post_question">Post Question</a></li>
+                {% endif %}
+                <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+                {% else %}
+                <li><a href="/login" class="btn btn-primary">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="padding: 3rem 0; text-align: center; color: var(--text-secondary);">
+        <div class="container">
+            <p>&copy; 2026 Aptitude. Elevate your potential.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.onscroll = function () {
+            var nav = document.getElementById('navbar');
+            if (window.pageYOffset > 50) {
+                nav.classList.add("scrolled");
+            } else {
+                nav.classList.remove("scrolled");
+            }
+        };
+    </script>
+</body>
+
+</html>
